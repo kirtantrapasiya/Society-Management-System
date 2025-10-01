@@ -1,0 +1,250 @@
+# ============================================
+# .gitignore for Backend
+# ============================================
+
+# Firebase Service Account Key (NEVER COMMIT THIS!)
+config/serviceAccountKey.json
+serviceAccountKey.json
+*.json
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# ============================================
+# COMPLETE SETUP GUIDE
+# ============================================
+
+# STEP 1: Create Backend Folder Structure
+# -----------------------------------------
+mkdir backend
+cd backend
+mkdir config routes
+
+# STEP 2: Initialize Node.js Project
+# -----------------------------------
+npm init -y
+
+# STEP 3: Install Dependencies
+# -----------------------------
+npm install express cors firebase-admin dotenv
+npm install --save-dev nodemon
+
+# STEP 4: Download Firebase Service Account Key
+# ----------------------------------------------
+# 1. Go to Firebase Console: https://console.firebase.google.com
+# 2. Select your project
+# 3. Click Settings (gear icon) > Project Settings
+# 4. Navigate to "Service Accounts" tab
+# 5. Click "Generate New Private Key" button
+# 6. Download the JSON file
+# 7. Rename it to: serviceAccountKey.json
+# 8. Move it to: backend/config/serviceAccountKey.json
+
+# STEP 5: Create Files
+# ---------------------
+# Create these files in your backend folder:
+# - server.js (use the server setup code)
+# - routes/renterRoutes.js (use the renter routes code)
+# - .gitignore (use the .gitignore content above)
+# - package.json (already created by npm init)
+
+# STEP 6: Update package.json Scripts
+# ------------------------------------
+# Add these scripts to package.json:
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  }
+}
+
+# STEP 7: Start the Server
+# -------------------------
+npm run dev
+
+# You should see:
+# ╔════════════════════════════════════════════╗
+# ║   Residence Management System - Backend   ║
+# ║   Server running on port 5001              ║
+# ╚════════════════════════════════════════════╝
+
+# STEP 8: Test the Server
+# ------------------------
+# Open browser and visit:
+http://localhost:5001
+
+# Should return:
+{
+  "message": "Residence Management System API",
+  "version": "1.0.0"
+}
+
+# STEP 9: Update Frontend
+# ------------------------
+# In your React app's AddRenterModal.js:
+# - Make sure API_URL is set to: http://localhost:5001
+# - Replace the old AddRenterModal with the new version
+
+# STEP 10: Test Complete Flow
+# ----------------------------
+# 1. Login as owner
+# 2. Go to owner dashboard
+# 3. Click "Add Renter"
+# 4. Enter owner credentials
+# 5. Fill renter details
+# 6. Click "Create Renter"
+# 7. Wait for loading (backend processes everything)
+# 8. Success! Redirected to owner dashboard
+
+# ============================================
+# API ENDPOINT DOCUMENTATION
+# ============================================
+
+# POST /api/renters/create
+# Creates a new renter account
+# 
+# Request Body:
+{
+  "ownerEmail": "owner@example.com",      // Owner's email for verification
+  "ownerPassword": "password123",         // Owner's password
+  "ownerUid": "firebase_owner_uid",       // Owner's Firebase UID
+  "ownerRoomNumber": "101",               // Room number
+  "renterData": {
+    "fullName": "kirtan trapasiya",               // Renter's full name
+    "email": "kirtan@example.com",          // Renter's email
+    "password": "password123",            // Renter's password (min 6 chars)
+    "contactNo": "1234567890"             // Renter's contact number
+  }
+}
+
+# Success Response (201):
+{
+  "success": true,
+  "message": "Renter account created successfully",
+  "data": {
+    "renterUid": "firebase_renter_uid",
+    "renterEmail": "kirtan@example.com",
+    "renterName": "kirtan trapasiya",
+    "roomNumber": "101",
+    "ownerCustomToken": "custom_token_for_owner"
+  }
+}
+
+# Error Response (400/404/409/500):
+{
+  "success": false,
+  "message": "Error message here",
+  "error": "Detailed error (in development mode)"
+}
+
+# ============================================
+# BACKEND PROCESS FLOW
+# ============================================
+
+# When you call POST /api/renters/create:
+# 
+# Step 1: Verify owner credentials
+#         - Check owner exists in Firestore
+#         - Validate owner email matches
+# 
+# Step 2: Check for existing renter
+#         - Query users collection by email
+#         - Return error if already exists
+# 
+# Step 3: Create renter Firebase Auth account
+#         - Use Firebase Admin SDK
+#         - createUser() method
+# 
+# Step 4: Create renter Firestore document
+#         - Add to users collection
+#         - Include all renter data
+# 
+# Step 5: Update room document
+#         - Set rent = true
+#         - Add renter information
+#         - Update timestamps
+# 
+# Step 6: Generate custom token for owner
+#         - Create custom token
+#         - Return to frontend
+#         - Frontend re-authenticates owner
+# 
+# Step 7: Return success response
+#         - Include renter details
+#         - Include owner custom token
+
+# ============================================
+# TROUBLESHOOTING
+# ============================================
+
+# Error: "Cannot find module 'firebase-admin'"
+# Solution: npm install firebase-admin
+
+# Error: "EADDRINUSE: address already in use :::5001"
+# Solution: Kill process using port 5001 or change PORT in .env
+
+# Error: "Failed to parse private key"
+# Solution: Check serviceAccountKey.json path and format
+
+# Error: "CORS error in browser"
+# Solution: Check CORS configuration in server.js
+
+# Error: "Firebase app already initialized"
+# Solution: Only initialize Firebase Admin once in server.js
+
+# Error: "auth/email-already-exists"
+# Solution: Email is already registered, use different email
+
+# ============================================
+# SECURITY BEST PRACTICES
+# ============================================
+
+# 1. Never commit serviceAccountKey.json
+# 2. Use environment variables for sensitive data
+# 3. Implement rate limiting in production
+# 4. Add authentication middleware for API routes
+# 5. Validate all inputs on backend
+# 6. Use HTTPS in production
+# 7. Implement proper error handling
+# 8. Log all critical operations
+# 9. Regular security audits
+# 10. Keep dependencies updated
+
+# ============================================
+# PRODUCTION DEPLOYMENT
+# ============================================
+
+# For production deployment:
+# 1. Set NODE_ENV=production
+# 2. Use environment variables for all config
+# 3. Enable HTTPS
+# 4. Set up proper logging
+# 5. Use a process manager (PM2)
+# 6. Set up monitoring and alerts
+# 7. Implement rate limiting
+# 8. Add API authentication
+# 9. Use a reverse proxy (nginx)
+# 10. Regular backups

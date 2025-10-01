@@ -1,0 +1,100 @@
+# ============================================
+# .gitignore for Backend and Frontend
+# ============================================
+
+# ============================================
+# Backend Specific
+# ============================================
+
+# Firebase Service Account Key (NEVER COMMIT THIS!)
+config/serviceAccountKey.json
+serviceAccountKey.json
+*.json
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# ============================================
+# Frontend Specific
+# ============================================
+
+# Node modules
+node_modules/
+
+# Build output (React, Next.js, etc.)
+build/
+.next/
+out/
+
+# Vercel (for deployment)
+.vercel/
+
+# OS files
+.DS_Store
+
+# Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# Coverage (for testing)
+coverage/
+
+# ============================================
+# Testing and Production Specific
+# ============================================
+
+# Production build folder
+/build
+
+# Next.js output (if applicable)
+.next/
+out/
+
+# Yarn lock files for different environments
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ============================================
+# Security and Troubleshooting
+# ============================================
+
+# Never commit serviceAccountKey.json
+# Always use environment variables for sensitive data
+
+# Debug logs and other potential logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
