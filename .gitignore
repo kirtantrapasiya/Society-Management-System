@@ -4,13 +4,9 @@
 # Ignore dependencies
 # ============================================
 /node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+/client/node_modules
+/server/node_modules
+/client/build
 
 # ============================================
 # Testing files
@@ -31,70 +27,28 @@
 # ============================================
 # Miscellaneous
 # ============================================
-.DS_Store
-*.pem
-
-# ============================================
-# Debugging files
-# ============================================
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# ============================================
-# Environment variables (can opt-in for committing if needed)
-# ============================================
-.env*
- 
-# ============================================
-# Vercel config (if using Vercel)
-# ============================================
-.vercel
-
-# ============================================
-# Typescript build files
-# ============================================
-*.tsbuildinfo
-next-env.d.ts
+/client/.DS_Store
+/server/.DS_Store
+/server/Thumbs.db
 
 # ============================================
 # Ignore Firebase config (Firebase.js)
 # ============================================
-frontend/firebase.js
-backend/firebase.js
+/client/firebase.js
+/server/firebase.js
 
 # ============================================
 # Ignore Firebase Service Account Key
 # ============================================
-config/serviceAccountKey.json
+/client/config/serviceAccountKey.json
 serviceAccountKey.json
 *.json
 
 # ============================================
-# Environment variables for Backend
+# Environment variables
 # ============================================
-frontend/.env
-backend/.env
-.env.local
-.env.development
-.env.production
-
-# ============================================
-# Ignore Node modules for Backend
-# ============================================
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# ============================================
-# IDE files (VSCode, IntelliJ, etc.)
-# ============================================
-.vscode/
-.idea/
-*.swp
-*.swo
+/client/.env
+/server/.env
 
 # ============================================
 # Ignore logs for Backend
@@ -102,16 +56,4 @@ yarn-error.log*
 logs/
 *.log
 
-# ============================================
-# Ignore build directories (Frontend & Backend)
-# ============================================
-frontend/build/
-frontend/.next/
-frontend/out/
-backend/build/
 
-# ============================================
-# Ignore OS-specific files
-# ============================================
-.DS_Store
-Thumbs.db
