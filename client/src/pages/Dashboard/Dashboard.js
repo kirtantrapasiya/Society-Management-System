@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddRenter, setShowAddRenter] = useState(false);
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const role = useMemo(() => userDoc?.role || "owner", [userDoc?.role]);
 
@@ -417,7 +417,7 @@ const RenterSection = React.memo(({ renter, room, onUpdate }) => {
     
     try {
       const renterUid = renter.uid || renter.id;
-      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5001';
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       
       // Call backend API to delete renter
       const response = await fetch(`${BACKEND_URL}/api/renters/${renterUid}`, {
