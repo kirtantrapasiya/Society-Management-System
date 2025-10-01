@@ -15,7 +15,7 @@ A comprehensive web application for managing residential societies, built with R
 - **Queries** - Allow residents to submit and track queries for quick resolution
 
 ## Project Structure
-
+```
 society-management/
 │
 ├── backend/                    # Node.js + Express Backend
@@ -69,7 +69,7 @@ society-management/
     │   ├── index.js
     │   └── firebase.js         # Firebase client config
     └── package.json
-
+```
 
 ## Getting Started
 
