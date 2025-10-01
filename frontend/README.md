@@ -18,6 +18,8 @@ A comprehensive web application for managing residential societies, built with R
 ```
 society-management/
 │
+├── .gitignore                  # Git ignore file
+│
 ├── backend/                    # Node.js + Express Backend
 │   ├── config/
 │   │   └── serviceAccountKey.json
@@ -69,6 +71,7 @@ society-management/
     │   ├── index.js
     │   └── firebase.js         # Firebase client config
     └── package.json
+
 ```
 
 ## Getting Started
