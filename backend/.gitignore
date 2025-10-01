@@ -160,6 +160,9 @@ http://localhost:5001
   "error": "Detailed error (in development mode)"
 }
 
+# Ignore Firebase config
+firebase.js
+
 # ============================================
 # BACKEND PROCESS FLOW
 # ============================================

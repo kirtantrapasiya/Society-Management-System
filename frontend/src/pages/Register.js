@@ -307,11 +307,11 @@ const Register = () => {
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-7xl flex flex-col lg:flex-row">
         <div className="flex-1 bg-gradient-to-br from-[#1D4ED8] via-[#0080e8] to-neutral-400 p-6 md:p-8 flex flex-col justify-center items-center text-white relative overflow-hidden min-h-[300px] lg:min-h-auto">
           <div className="relative z-10 text-center max-w-md w-full">
-            <div className="mb-6 p-4 md:mb-10 flex justify-center items-center bg-white rounded-full shadow-lg">
-              <img src={logo} alt="Logo" className="h-20 w-20" />
+            <div className="mb-6 p-4 md:mb-10 flex justify-center items-center bg-white rounded-full shadow-lg gap-3">
+              <img src={logo} alt="Logo" className="h-20 w-21" />
               <div className="flex flex-col pt-2">
-                <span className="font-bold text-2xl text-gray-900">Residence</span>
-                <p className="text-sm text-gray-500 pl-5">Management System</p>
+                <span className="font-bold text-3xl text-left text-gray-900">Society</span>
+                <p className="flex flex-col text-sm text-left text-gray-500">Management System</p>
               </div>
             </div>
             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">Welcome to The Building</h1>

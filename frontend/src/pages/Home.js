@@ -67,11 +67,11 @@ const HomePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
-          <div className='flex justify-center items-center mb-8'>
-              <img src={logo} alt="Logo" className="h-20 w-22" />
+          <div className='flex justify-center items-center mb-8 gap-3'>
+              <img src={logo} alt="Logo" className="h-20 w-21" />
               <div className="flex flex-col pt-2">
-                <span className="font-bold text-2xl text-gray-900">Residence</span>
-                <p className="text-sm text-gray-500 pl-5">Management System</p>
+                <span className="font-bold text-2xl text-left text-gray-900">Society</span>
+                <p className="text-sm text-gray-500">Management System</p>
               </div>
           </div>
           
