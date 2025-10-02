@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '../../firebase';
 
-const API_URL = 'http://localhost:5001';
+const API_URL = REACT_APP_BACKEND_URL;
 
 const AddRenterModal = ({ ownerUid, ownerRoomNumber, onSuccess, onClose }) => {
   const navigate = useNavigate();

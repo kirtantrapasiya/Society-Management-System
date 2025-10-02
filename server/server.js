@@ -3,31 +3,29 @@ import cors from "cors";
 import multer from "multer";
 import ImageKit from "imagekit";
 import dotenv from "dotenv";
-import admin from 'firebase-admin';
-import fs from 'fs';
+import admin from "firebase-admin";
 
-// Load environment variables FIRST
+// Load env variables
 dotenv.config();
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
-  throw new Error("FIREBASE_SERVICE_ACCOUNT_PATH environment variable is not set.");
+// 🔹 Firebase Admin initialization via ENV variables
+if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
+  throw new Error("Firebase environment variables are missing. Please set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY");
 }
-
-if (!process.env.FIREBASE_API_KEY) {
-  console.warn("FIREBASE_API_KEY not set. Password verification will not work.");
-}
-
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
 
 if (admin.apps.length === 0) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"), // handle line breaks
+    }),
   });
 }
 
-console.log('Firebase Admin initialized successfully');
+console.log("✅ Firebase Admin initialized successfully");
 
+// Imports
 import renterRoutes from "./routes/renterRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -35,6 +33,7 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
@@ -47,11 +46,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Debug logger
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
 });
 
+// Multer setup
 const upload = multer({ storage: multer.memoryStorage() });
 
 // ImageKit setup
@@ -66,7 +67,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/renters", renterRoutes);
 
-// Protected Upload Route
+// File upload
 app.post("/api/upload", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
@@ -86,60 +87,61 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
   }
 });
 
+// Health check
 app.get("/health", (req, res) => {
   res.json({
-    status: 'OK',
-    message: 'Server is running',
+    status: "OK",
+    message: "Server is running",
     timestamp: new Date().toISOString(),
-    firebase: admin.apps.length > 0 ? 'Connected' : 'Not Connected',
+    firebase: admin.apps.length > 0 ? "Connected" : "Not Connected",
     port: port,
-    cors: 'Enabled'
+    cors: "Enabled"
   });
 });
 
 // Root endpoint
 app.get("/", (req, res) => {
   res.json({
-    message: 'Residence Management System API',
-    version: '1.0.0',
+    message: "Residence Management System API",
+    version: "1.0.0",
     port: port,
     endpoints: {
-      health: '/health',
-      auth: '/api/auth',
-      users: '/api/users',
-      createRenter: 'POST /api/renters/create',
-      deleteRenter: 'DELETE /api/renters/:renterId',
-      uploadImage: 'POST /api/upload'
+      health: "/health",
+      auth: "/api/auth",
+      users: "/api/users",
+      createRenter: "POST /api/renters/create",
+      deleteRenter: "DELETE /api/renters/:renterId",
+      uploadImage: "POST /api/upload"
     }
   });
 });
 
-// Error Handling
+// Error handler
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error("Error:", err);
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    message: err.message || "Internal server error",
+    error: process.env.NODE_ENV === "development" ? err.stack : undefined
   });
 });
 
-// 404 Route Not Found Handler
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: "Route not found"
   });
 });
 
-// Start Server
+// Start server
 try {
   app.listen(port, () => {
     console.log(`
     Residence Management System - Backend         
-    Server running on port ${port}                
-    URL: http://localhost:${port}                 
-    CORS: Enabled for http://localhost:3000       
+    🚀 Server running on port ${port}                
+    🌐 URL: http://localhost:${port}                 
+    🔑 Firebase: Connected
     `);
   }).on("error", (err) => {
     console.error("Server failed to start:", err.message);
@@ -150,9 +152,9 @@ try {
   process.exit(1);
 }
 
-// Graceful Shutdown
-process.on('SIGINT', () => {
-  console.log('\nShutting down server gracefully...');
+// Graceful shutdown
+process.on("SIGINT", () => {
+  console.log("\nShutting down server gracefully...");
   process.exit(0);
 });
 
