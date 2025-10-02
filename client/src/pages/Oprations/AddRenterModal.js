@@ -26,8 +26,6 @@ const AddRenterModal = ({ ownerUid, ownerRoomNumber, onSuccess, onClose }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  console.log('API URL:', process.env.REACT_APP_API_URL);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
