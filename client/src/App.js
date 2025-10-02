@@ -13,6 +13,7 @@ import SecretaryDashboard from "./pages/Dashboard/SecretaryDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
+  console.log('API URL:', process.env.REACT_APP_API_URL);
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
