@@ -1,0 +1,28 @@
+{
+  "name": "society-management-system",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server/server.js",
+    "client": "cd client && npm start",  
+    "server": "cd server && node server.js",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "dependencies": {
+    "concurrently": "^7.2.1",
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "multer": "^2.0.2",
+    "imagekit": "^6.0.0",
+    "dotenv": "^17.2.2",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.1",
+    "react-scripts": "5.0.1"  
+  },
+  "keywords": [],
+  "author": "Kirtan Trapasiya",
+  "license": "ISC"
+}

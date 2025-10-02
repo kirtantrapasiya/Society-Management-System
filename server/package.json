@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "imagekit": "^6.0.0",
+    "multer": "^2.0.2",
+    "node-fetch": "^3.3.2",
+    "readline-sync": "^1.4.10"
+  }
+}

@@ -42,7 +42,6 @@
 # ============================================
 /client/config/serviceAccountKey.json
 serviceAccountKey.json
-*.json
 
 # ============================================
 # Environment variables
