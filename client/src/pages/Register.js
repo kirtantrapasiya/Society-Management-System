@@ -51,6 +51,7 @@ const Register = () => {
       if (!roomSnap.exists()) {
         setRoomInfo({ empty: true });
         setRegistrationType("owner");
+        setRole("owner");
         setError("");
         return true;
       }
@@ -70,6 +71,8 @@ const Register = () => {
       } else if (roomData.rent === true && roomData.isRenterFamily === false) {
         setError("Only room owner can add renter. Please contact room owner.");
         setRoomInfo(null);
+        setRegistrationType("");
+        setRole("");
         return false;
       }
       
@@ -84,9 +87,11 @@ const Register = () => {
 
   const handleRoomCheck = async () => {
     const roomId = formData.roomNumber.trim();
-    if (roomId) {
-      await checkRoom(roomId);
+    if (!roomId) {
+      setError("Please enter a room number first.");
+      return;
     }
+    await checkRoom(roomId);
   };
 
   const handleSubmit = async (e) => {
@@ -97,6 +102,13 @@ const Register = () => {
     const { roomNumber, fullName, email, password, confirmPassword, contactNo, relationship } = formData;
     const roomId = roomNumber.trim();
 
+    // Validate room check first
+    if (!roomInfo || !registrationType) {
+      setError("Please click 'Check' button to verify your room number first.");
+      setLoading(false);
+      return;
+    }
+
     if (!roomNumber || !fullName || !email || !password || !confirmPassword || !contactNo) {
       setError("Please fill all required fields.");
       setLoading(false);
@@ -104,7 +116,7 @@ const Register = () => {
     }
 
     if ((registrationType === "owner_family" || registrationType === "renter_family") && !relationship) {
-      setError("Please specify your relationship.");
+      setError("your relationship is required.");
       setLoading(false);
       return;
     }
@@ -122,11 +134,6 @@ const Register = () => {
     }
 
     try {
-      if (!(await checkRoom(roomId))) {
-        setLoading(false);
-        return;
-      }
-
       // Create Firebase Auth user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -449,7 +456,7 @@ const Register = () => {
                       placeholder="e.g., Son, Daughter"
                       value={formData.relationship}
                       onChange={handleChange}
-                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-xl outline-none  text-gray-900 text-sm md:text-base"
+                      className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-xl outline-none text-gray-900 text-sm md:text-base"
                     />
                   </div>
                 )}
@@ -458,11 +465,17 @@ const Register = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="w-full px-4 md:px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
+                  disabled={loading || !roomInfo || !registrationType}
+                  className="w-full px-4 md:px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
                 >
                   {loading ? "Registering..." : `Register as ${getRegistrationTypeText()}`}
                 </button>
+                
+                {!roomInfo && !loading && (
+                  <p className="text-sm text-gray-500 mt-2 text-center">
+                    Please check your room number before registering
+                  </p>
+                )}
                 
                 <div className="text-center mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-200">
                   <p className="text-sm text-gray-600">
