@@ -1,18 +1,44 @@
-# Society Management System
+# Residence Management System
 
 A comprehensive web application for managing residential societies, built with React and Node.js. This system streamlines property management, resident tracking, maintenance requests, and society operations.
 
 ## Features
 
-- **Room Management** - Efficiently manage property rooms with detailed tracking and organization
-- **Family & Renter Management** - Comprehensive profiles for family members and renters
-- **Secure Access** - Role-based access control ensuring data security and privacy
-- **Easy Authentication** - Simple and secure login system powered by Firebase
-- **Online/Offline Maintenance** - Track maintenance requests, manage statuses, and notify users
-- **Events and Updates** - Keep residents informed with timely notifications
-- **Rules and Committee** - Manage society rules and committee members effectively
-- **Banking** - Track society funds, process transactions, and generate financial reports
-- **Queries** - Allow residents to submit and track queries for quick resolution
+- **Room Management**  
+  Efficiently manage property rooms with detailed tracking and organization.
+
+- **Family & Renter Management**  
+  Maintain comprehensive profiles for family members and renters with easy access to information.
+
+- **Secure Access**  
+  Role-based access control ensuring data security and privacy for all users.
+
+- **Easy Authentication**  
+  Simple and secure login system powered by Firebase for smooth onboarding.
+
+- **Online/Offline Maintenance**  
+  Track maintenance requests, manage their statuses, and automatically notify users on updates.
+
+- **24-Hour Maintenance Reminders**  
+  Automatically send reminders via in-app notifications, messages, and email 24 hours before scheduled maintenance.
+
+- **Unpaid Maintenance Alerts**  
+  Automatically notify residents about pending maintenance payments with timely in-app, SMS, and email alerts.
+
+- **Events and Updates**  
+  Keep residents informed with announcements and timely updates.
+
+- **Real-Time Notifications**  
+  Instantly notify users of new events, updates, notices, and maintenance activities.
+
+- **Rules and Committee**  
+  Manage and update society rules and committee member information effectively.
+
+- **Banking**  
+  Track society funds, process internal transactions, and generate detailed financial reports.
+
+- **Resident Queries**  
+  Allow residents to submit and track queries with a system designed for quick resolution.
 
 ## Project Structure
 ```

@@ -310,7 +310,7 @@ const Register = () => {
             <div className="mb-6 p-4 md:mb-10 flex justify-center items-center bg-white rounded-full shadow-lg gap-3">
               <img src={logo} alt="Logo" className="h-20 w-21" />
               <div className="flex flex-col pt-2">
-                <span className="font-bold text-3xl text-left text-gray-900">Society</span>
+                <span className="font-bold text-3xl text-left text-cyan-800">Society</span>
                 <p className="flex flex-col text-sm text-left text-gray-500">Management System</p>
               </div>
             </div>

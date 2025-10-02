@@ -65,7 +65,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center space-x-3">
             <img src={logo} alt="Logo" className="h-9 w-9" />
             <div className="flex flex-col leading-tight">
-              <span className="font-bold text-lg text-gray-900">Society</span>
+              <span className="font-bold text-lg text-cyan-800">Society</span>
               <p className="text-xs text-gray-500 -mt-1">Management System</p>
             </div>
           </Link>
