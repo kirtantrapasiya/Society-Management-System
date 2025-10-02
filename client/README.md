@@ -1,4 +1,4 @@
-# Residence Management System
+# Society Management System
 
 A comprehensive web application for managing residential societies, built with React and Node.js. This system streamlines property management, resident tracking, maintenance requests, and society operations.
 
