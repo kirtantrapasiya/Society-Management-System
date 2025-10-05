@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { AlertCircle, CheckCircle2, Mail, ArrowLeft, Loader2 } from "lucide-react";
-import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { AlertCircle, Loader2, User } from "lucide-react";
+import { auth } from "../../firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 
-export default function ForgotPassword() {
+export default function VisitorForgotPassword() {
   const navigate = useNavigate();
   
   const [email, setEmail] = useState("");
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
 
     try {
       await sendPasswordResetEmail(auth, email.trim().toLowerCase(), {
-        url: window.location.origin + '/login',
+        url: window.location.origin + '/visitor-login',
         handleCodeInApp: false,
       });
 
@@ -71,7 +71,7 @@ export default function ForgotPassword() {
       
       switch (err.code) {
         case "auth/user-not-found":
-          errorMessage = "No account found with this email address. Please check your email or create a new account.";
+          errorMessage = "No visitor account found with this email address. Please check your email or create a new account.";
           break;
         case "auth/invalid-email":
           errorMessage = "Please enter a valid email address.";
@@ -103,16 +103,16 @@ export default function ForgotPassword() {
   };
 
   const handleBackToLogin = () => {
-    navigate("/login");
+    navigate("/visitor-login");
   };
 
   if (isEmailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
         <div className="w-full max-w-lg">
           <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
             <div className="text-center mb-8">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 mt-8">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
                 Check Your Email
               </h1>
               <p className="text-gray-600 text-sm">
@@ -157,7 +157,7 @@ export default function ForgotPassword() {
                 onClick={handleBackToLogin}
                 className="w-full py-3 px-4 flex items-center justify-center text-gray-600 font-medium hover:text-gray-800 transition-colors"
               >
-                Back to Sign In
+                Back to Visitor Login
               </button>
             </div>
 
@@ -180,47 +180,47 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white owerflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-white">
       <div className="w-full max-w-lg">
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
           <div className="text-center mb-8">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 mt-8">
-              Forgot Password
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+              Forgot Password - Visitor
             </h1>
             <p className="text-gray-600 text-sm">
               Enter your email address and we'll send you a link to reset your password
             </p>
           </div>
 
-            {(error || emailError) ? (
+          {(error || emailError) ? (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl">
-                <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-3">
                 <div>
-                    {error && (
+                  {error && (
                     <>
-                        <h3 className="text-sm font-medium text-red-800">Password Reset Failed</h3>
-                        <p className="text-sm text-red-700 mt-1">{error}</p>
+                      <h3 className="text-sm font-medium text-red-800">Password Reset Failed</h3>
+                      <p className="text-sm text-red-700 mt-1">{error}</p>
                     </>
-                    )}
-                    {emailError && (
+                  )}
+                  {emailError && (
                     <div className="flex items-center space-x-2 text-red-700 text-sm mt-1">
-                        <AlertCircle className="w-4 h-4" />
-                        <span>{emailError}</span>
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{emailError}</span>
                     </div>
-                    )}
+                  )}
                 </div>
-                </div>
+              </div>
             </div>
-            ) : (
+          ) : (
             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
-                <div className="text-center">
+              <div className="text-center">
                 <p className="text-xs text-blue-700">
-                    <strong>Security Note:</strong> Password reset links are valid for 1 hour
-                    and can only be used once for security reasons.
+                  <strong>Security Note:</strong> Password reset links are valid for 1 hour
+                  and can only be used once for security reasons.
                 </p>
-                </div>
+              </div>
             </div>
-            )}
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -231,10 +231,10 @@ export default function ForgotPassword() {
                 id="email"
                 type="email"
                 name="email"
-                placeholder="Enter your registered email address"
+                placeholder="Enter your visitor email address"
                 value={email}
                 onChange={handleEmailChange}
-                className="w-full px-4 py-3 text-gray-900 placeholder-gray-500 border rounded-xl border-gray-300 outline-none"
+                className="w-full px-4 py-3 text-gray-900 placeholder-gray-500 border rounded-xl border-gray-300 outline-none transition"
                 required
                 disabled={isLoading}
               />
@@ -263,7 +263,7 @@ export default function ForgotPassword() {
               onClick={handleBackToLogin}
               className="inline-flex items-center text-sm text-gray-600 hover:text-gray-800 font-medium focus:outline-none focus:underline"
             >
-              Back to Sign In
+              Back to Visitor Login
             </button>
           </div>
 
@@ -272,7 +272,7 @@ export default function ForgotPassword() {
               <p className="text-sm text-gray-800 font-medium mb-1">Need Help?</p>
               <p className="text-xs text-gray-600">
                 If you don't remember your email address or continue having issues,
-                please contact your building secretary for assistance.
+                please contact the building management for assistance.
               </p>
             </div>
           </div>

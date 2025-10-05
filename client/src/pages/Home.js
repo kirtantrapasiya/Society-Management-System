@@ -7,15 +7,22 @@ import logo from '../assets/logo.svg';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, userDoc } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeSection, setActiveSection] = useState('features'); // 'features' or 'problems'
+  const [activeSection, setActiveSection] = useState('features');
 
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+    if (user && userDoc) {
+      // Redirect based on user role
+      if (userDoc.role === 'visitor') {
+        navigate('/visitor-dashboard');
+      } else if (userDoc.role === 'secretary') {
+        navigate('/secretary-dashboard');
+      } else if (['owner', 'owner_family', 'renter', 'renter_family'].includes(userDoc.role)) {
+        navigate('/dashboard');
+      }
     }
-  }, [user, navigate]);
+  }, [user, userDoc, navigate]);
 
   const features = [
     {
@@ -77,6 +84,11 @@ const HomePage = () => {
       title: "Queries",
       description: "Allow residents to submit and track queries for quick resolution",
       color: "bg-rose-200"
+    },
+    {
+      title: "Visitor Management",
+      description: "Track and manage visitor entries, approvals, and visit history efficiently",
+      color: "bg-violet-200"
     }
   ];
 
@@ -117,7 +129,7 @@ const HomePage = () => {
     "Track room occupancy and details",
     "Manage owner and renter information",
     "Add and manage family members",
-    "Secure role-based access",
+    "Secure role-based access for residents and visitors",
     "Real-time data updates",
     "Clean and intuitive interface"
   ];
@@ -143,7 +155,12 @@ const HomePage = () => {
 
   const handleSectionChange = (section) => {
     setActiveSection(section);
-    setCurrentSlide(0); // Reset to first slide when switching sections
+    setCurrentSlide(0);
+  };
+
+  // Navigate to choose user type page instead of direct login
+  const handleGetStarted = () => {
+    navigate('/choose-register-type');
   };
 
   return (
@@ -161,7 +178,7 @@ const HomePage = () => {
           
           <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
             Streamline your property management with our comprehensive system. 
-            Manage rooms, residents, and family members with all secretary work in one place.
+            Manage rooms, residents, visitors, and family members with all secretary work in one place.
           </p>
           <div className="max-w-2xl mx-auto mb-8">
             <div className="bg-red-50 p-4 rounded-lg shadow-md">
@@ -172,7 +189,7 @@ const HomePage = () => {
           </div>   
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigate('/login')}
+              onClick={handleGetStarted}
               className="px-8 py-4 bg-cyan-700 text-white rounded-lg font-semibold hover:bg-cyan-800 transition-colors flex items-center justify-center shadow-lg hover:shadow-xl"
             >
               Get Started
@@ -180,10 +197,10 @@ const HomePage = () => {
             </button>
             
             <button
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/choose-login-type')}
               className="px-8 py-4 bg-white text-gray-500 border-2 border-gray-500 rounded-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl"
             >
-              Sign Up
+              Sign In
             </button>
           </div>
         </div>
@@ -217,7 +234,6 @@ const HomePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {activeSection === 'features' ? (
-            // Features Cards
             visibleItems().map((feature, index) => (
               <div
                 key={index}
@@ -234,7 +250,6 @@ const HomePage = () => {
               </div>
             ))
           ) : (
-            // Problems & Solutions Cards
             visibleItems().map((item, index) => (
               <div
                 key={index}
@@ -321,16 +336,16 @@ const HomePage = () => {
                 Join us today and experience seamless property management
               </p>
               <button
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/choose-register-type')}
                 className="w-full px-6 py-4 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors flex items-center justify-center"
               >
-                Create Account
+                Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </button>
               <p className="text-center text-gray-500 mt-4">
                 Already have an account?{' '}
                 <button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/choose-login-type')}
                   className="text-cyan-600 hover:text-cyan-700 font-semibold"
                 >
                   Sign In

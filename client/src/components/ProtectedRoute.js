@@ -25,7 +25,14 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
       }
 
       try {
-        const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+        // Check in 'users' collection first (for residents)
+        let docSnap = await getDoc(doc(db, "users", currentUser.uid));
+        
+        // If not found, check in 'visitors' collection
+        if (!docSnap.exists()) {
+          docSnap = await getDoc(doc(db, "visitors", currentUser.uid));
+        }
+        
         const profile = docSnap.exists() ? docSnap.data() : null;
         setState({ loading: false, user: currentUser, profile });
       } catch (error) {
@@ -41,8 +48,8 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     return <SimpleLoading />;
   }
 
-  // Not logged in → redirect to login
-  if (!state.user) return <Navigate to="/login" replace />;
+  // Not logged in → redirect to home (choose user type page)
+  if (!state.user) return <Navigate to="/" replace />;
 
   // Logged in but Firestore profile missing → redirect to error page
   if (!state.profile) return <Navigate to="/error" replace />;

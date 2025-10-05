@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import AddRenterModal from '../Oprations/AddRenterModal';
 import OwnerCredentialsModal from '../Oprations/OwnerCredentialsModal';
 
-const Dashboard = () => {
+const ResidentDashboard = () => {
   const { user, userDoc, loading: authLoading, refreshUserData } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -729,4 +729,4 @@ const RenterSection = React.memo(({ renter, room, onUpdate }) => {
   );
 };
 
-export default Dashboard;
+export default ResidentDashboard;

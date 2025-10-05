@@ -1,16 +1,23 @@
 import React from "react";
 import "./App.css"
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import ResidentLogin from "./pages/Login/ResidentLogin";
+import ResidentRegister from "./pages/Register/ResidentRegister";
 import ErrorPage from "./pages/Error";
 import PrivateRoute from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import ResidentDashboard from "./pages/Dashboard/ResidentDashboard";
 import SecretaryDashboard from "./pages/Dashboard/SecretaryDashboard";
-import ForgotPassword from "./pages/ForgotPassword";
+import VisitorForgotPassword from "./pages/ForgotPassword/VisitorForgotPassword";
+import ResidentForgotPassword from "./pages/ForgotPassword/ResidentForgotPassword";
+import VisitorDashboard from "./pages/Dashboard/VisitorDashboard";
+import VisitorLogin from "./pages/Login/VisitorLogin";
+import VisitorRegister from "./pages/Register/VisitorRegister";
+import RegisterChooseUserType from "./pages/Oprations/RegisterChooseUserType";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginChooseUserType from "./pages/Oprations/LoginChooseUserType";
 
 function App() {
   return (
@@ -20,18 +27,23 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/visitor-login" element={<VisitorLogin />} />
+          <Route path="/visitor-register" element={<VisitorRegister />} />
+          <Route path="/resident-login" element={<ResidentLogin />} />
+          <Route path="/choose-login-type" element={<LoginChooseUserType />} />
+          <Route path="/choose-register-type" element={<RegisterChooseUserType />} />
+          <Route path="/resident-register" element={<ResidentRegister />} />
+          <Route path="/visitor-forgot-password" element={<VisitorForgotPassword />} />
+          <Route path="/resident-forgot-password" element={<ResidentForgotPassword />} />
           
           {/* Main Dashboard Route - Handles all room scenarios */}
           <Route
-            path="/dashboard"
+            path="/resident-dashboard"
             element={
               <PrivateRoute
                 allowedRoles={["owner", "owner_family", "renter", "renter_family"]}
               >
-                <Dashboard />
+                <ResidentDashboard />
               </PrivateRoute>
             }
           />
@@ -46,6 +58,18 @@ function App() {
           />
 
           <Route path="/error" element={<ErrorPage />} />
+
+          <Route
+          path="/visitor-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['visitor']}>
+              <VisitorDashboard />
+            </ProtectedRoute>
+          }
+          />
+
+          {/* Catch all - redirect to home */}
+          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>
       </main>
 

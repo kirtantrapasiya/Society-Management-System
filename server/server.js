@@ -8,7 +8,7 @@ import admin from "firebase-admin";
 // Load env variables
 dotenv.config();
 
-// 🔹 Firebase Admin initialization via ENV variables
+// Firebase Admin initialization via ENV variables
 if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
   throw new Error("Firebase environment variables are missing. Please set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY");
 }
@@ -23,7 +23,7 @@ if (admin.apps.length === 0) {
   });
 }
 
-console.log("✅ Firebase Admin initialized successfully");
+console.log("Firebase Admin initialized successfully");
 
 // Imports
 import renterRoutes from "./routes/renterRoutes.js";
@@ -139,9 +139,9 @@ try {
   app.listen(port, () => {
     console.log(`
     Residence Management System - Backend         
-    🚀 Server running on port ${port}                
-    🌐 URL: http://localhost:${port}                 
-    🔑 Firebase: Connected
+    Server running on port ${port}                
+    URL: http://localhost:${port}                 
+    Firebase: Connected
     `);
   }).on("error", (err) => {
     console.error("Server failed to start:", err.message);

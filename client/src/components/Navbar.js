@@ -20,17 +20,38 @@ const Navbar = () => {
     }
   };
 
-  const isActive = (path) => location.pathname === path;
+const isActive = (path) => {
+  const currentPath = location.pathname;
+  
+  // Exact match for all paths
+  if (currentPath === path) {
+    return true;
+  }
+  
+  // Special handling: Home should only be active on exact "/" path
+  if (path === '/' && currentPath !== '/') {
+    return false;
+  }
+  
+  // Dashboard routes need exact match to prevent multiple active states
+  const dashboardRoutes = ['/resident-dashboard', '/visitor-dashboard', '/secretary-dashboard'];
+  if (dashboardRoutes.includes(path) || dashboardRoutes.includes(currentPath)) {
+    return currentPath === path;
+  }
+  
+  return false;
+};
 
   const getDashboardLink = () => {
     if (!userDoc) return "/";
+    if (userDoc.role === "visitor") return "/visitor-dashboard";
     if (userDoc.role === "secretary") return "/secretary-dashboard";
     if (
       ["owner", "owner_family", "renter", "renter_family"].includes(
         userDoc.role
       )
     )
-      return "/dashboard";
+      return "/resident-dashboard";
     return "/";
   };
 
@@ -48,12 +69,12 @@ const Navbar = () => {
     { 
       path: "/profile", 
       label: "Profile", 
-      show: !!user,
+      show: !!user && userDoc?.role !== "visitor",
     },
     { 
       path: "/settings", 
       label: "Settings", 
-      show: !!user,
+      show: !!user && userDoc?.role !== "visitor",
     },
   ];
 
@@ -93,18 +114,18 @@ const Navbar = () => {
           <div className="hidden custom-sm:flex items-center space-x-4">
             {!user ? (
               <div className="flex items-center space-x-3">
-                <Link
-                  to="/login"
+                <button
+                  onClick={() => navigate('/choose-login-type')}
                   className="text-gray-700 hover:text-blue-600 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-all"
                 >
                   Login
-                </Link>
-                <Link
-                  to="/register"
+                </button>
+                <button
+                  onClick={() => navigate('/choose-register-type')}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm"
                 >
-                  Register
-                </Link>
+                  Get Started
+                </button>
               </div>
             ) : (
               <div className="gap-8 flex items-center">
@@ -117,7 +138,7 @@ const Navbar = () => {
                       {userDoc?.name || userDoc?.fullName || user.email?.split('@')[0]}
                     </p>
                     <p className="text-xs text-gray-500 capitalize">
-                      {userDoc?.role || "member"}
+                      {userDoc?.role?.replace(/_/g, ' ') || "member"}
                     </p>
                   </div>
                 </div>
@@ -167,20 +188,24 @@ const Navbar = () => {
 
           {!user ? (
             <div className="pt-4 border-t border-gray-200 mt-4">
-              <Link
-                to="/login"
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-3 py-3 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all"
+              <button
+                onClick={() => {
+                  navigate('/choose-login-type');
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-3 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-all"
               >
                 Login
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-center mt-2 text-sm font-medium bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all"
+              </button>
+              <button
+                onClick={() => {
+                  navigate('/choose-register-type');
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-center mt-2 text-sm font-medium bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-all"
               >
-                Register
-              </Link>
+                Get Started
+              </button>
             </div>
           ) : (
             <div className="pt-4 border-t border-gray-200 mt-4 space-y-3">
@@ -193,7 +218,7 @@ const Navbar = () => {
                     {userDoc?.name || userDoc?.fullName || user.email?.split('@')[0]}
                   </p>
                   <p className="text-xs text-gray-500 capitalize">
-                    {userDoc?.role || "owner"}
+                    {userDoc?.role?.replace(/_/g, ' ') || "member"}
                   </p>
                 </div>
               </div>

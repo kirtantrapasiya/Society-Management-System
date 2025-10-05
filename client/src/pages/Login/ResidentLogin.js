@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
-import { auth, db } from "../firebase";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import { auth, db } from "../../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
-const Login = () => {
+const ResidentLogin = () => {
   const navigate = useNavigate();
   const { userDoc, loading: authLoading } = useAuth();
 
@@ -21,7 +21,7 @@ const Login = () => {
       const role = userDoc.role;
       if (role === "secretary") navigate("/secretary-dashboard", { replace: true });
       else if (["owner", "owner_family", "renter", "renter_family"].includes(role)) {
-        navigate("/dashboard", { replace: true });
+        navigate("/resident-dashboard", { replace: true });
       }
     }
   }, [userDoc, authLoading, navigate]);
@@ -59,7 +59,7 @@ const Login = () => {
     }
   };
 
-  const handleForgotPassword = () => navigate("/forgot-password");
+  const handleForgotPassword = () => navigate("/resident-forgot-password");
 
   if (authLoading) {
     return (
@@ -170,10 +170,17 @@ const Login = () => {
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-600">
               Don’t have an account?{" "}
-              <Link to="/register" className="text-blue-600 hover:text-blue-500 font-semibold">
+              <Link to="/resident-register" className="text-blue-600 hover:text-blue-500 font-semibold">
                 Sign up
               </Link>
             </p>
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center mt-3 justify-center gap-2 mx-auto text-gray-500 hover:text-gray-700 text-sm"
+            >
+              <ArrowLeft size={16} />
+              Back to home
+            </button>
           </div>
         </div>
       </div>
@@ -181,4 +188,4 @@ const Login = () => {
   );
 }
 
-export default Login;
+export default ResidentLogin;

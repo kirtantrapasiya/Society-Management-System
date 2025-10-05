@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, serverTimestamp, arrayUnion } from "firebase/firestore";
 import { Eye, EyeOff } from "lucide-react";
-import logo from "../assets/logo.svg";
+import logo from "../../assets/logo.svg";
 
-const Register = () => {
+const ResidentRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     roomNumber: "",
@@ -231,7 +231,7 @@ const Register = () => {
         console.log("Renter family member registered successfully");
       }
 
-      navigate("/dashboard");
+      navigate("/resident-dashboard");
 
     } catch (err) {
       console.error("Registration error:", err);
@@ -480,7 +480,7 @@ const Register = () => {
                 <div className="text-center mt-4 md:mt-6 pt-4 md:pt-6 border-t border-gray-200">
                   <p className="text-sm text-gray-600">
                     Already have an account?{" "}
-                    <Link to="/login" className="text-blue-600 hover:text-blue-500 font-semibold">
+                    <Link to="/resident-login" className="text-blue-600 hover:text-blue-500 font-semibold">
                       Sign in
                     </Link>
                   </p>
@@ -494,4 +494,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ResidentRegister;

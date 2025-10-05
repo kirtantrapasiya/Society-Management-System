@@ -28,7 +28,7 @@ try {
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    projectId: "resident-management-syst-b06cb"
+    projectId: process.env.FIREBASE_PROJECT_ID
   });
 }
 
@@ -51,19 +51,19 @@ async function createRooms() {
   console.log("\n=== Creating Rooms with Admin SDK ===");
   
   const totalRooms = await askQuestion("Enter total number of rooms to create: ");
-  const numRooms = parseInt(totalRooms);
+  const numRooms = 100 + parseInt(totalRooms);
   
   if (isNaN(numRooms) || numRooms <= 0) {
     console.log("Invalid number of rooms.");
     return false;
   }
 
-  console.log(`Creating ${numRooms} rooms...`);
+  console.log(`Creating ${numRooms - 100} rooms...`);
 
-  for (let i = 1; i <= numRooms; i++) {
+  for (let i = 101; i <= numRooms; i++) {
     try {
       await db.collection('rooms').doc(i.toString()).set({
-        roomNumber: i.toString(),
+        roomNumber: (i).toString(),
         owner: null,
         ownerName: null,
         ownerEmail: null,
@@ -80,13 +80,13 @@ async function createRooms() {
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
       
-      console.log(`Room ${i} created`);
+      console.log(`Room No. ${i} created`);
     } catch (error) {
-      console.error(`Error creating room ${i}:`, error.message);
+      console.error(`Error creating room no. ${i}:`, error.message);
     }
   }
   
-  console.log(`Successfully created ${numRooms} rooms!`);
+  console.log(`Successfully created ${numRooms - 100} rooms!`);
   return true;
 }
 
