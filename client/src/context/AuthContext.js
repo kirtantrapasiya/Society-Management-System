@@ -20,40 +20,53 @@ const SimpleLoading = () => (
   </div>
 );
 
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [userDoc, setUserDoc] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-const fetchUserDoc = useCallback(async (uid) => {
-  try {
-    if (!uid) {
-      setUserDoc(null);
-      return null;
-    }
+  const fetchUserDoc = useCallback(async (uid) => {
+    try {
+      if (!uid) {
+        setUserDoc(null);
+        return null;
+      }
 
-    const docRef = doc(db, "users", uid);
-    const docSnap = await getDoc(docRef);
+      const userDocRef = doc(db, "users", uid);
+      const userDocSnap = await getDoc(userDocRef);
 
-    if (!docSnap.exists()) {
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        console.log("User found in 'users' collection:", userData);
+        setUserDoc(userData);
+        setError(null);
+        return userData;
+      }
+
+      const visitorDocRef = doc(db, "visitors", uid);
+      const visitorDocSnap = await getDoc(visitorDocRef);
+
+      if (visitorDocSnap.exists()) {
+        const visitorData = visitorDocSnap.data();
+        console.log("User found in 'visitors' collection:", visitorData);
+        setUserDoc(visitorData);
+        setError(null);
+        return visitorData;
+      }
+
+      // Not found in either collection
+      console.error("User document not found in either collection");
       setUserDoc(null);
       setError("User document not found.");
       return null;
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+      setError(error.message);
+      setUserDoc(null);
+      return null;
     }
-
-    const userData = docSnap.data();
-    setUserDoc(userData);
-    setError(null);
-    return userData;
-  } catch (error) {
-    console.error("Error fetching user document:", error);
-    setError(error.message);
-    setUserDoc(null);
-    return null;
-  }
-}, []);
+  }, []);
 
   const refreshUserData = useCallback(async (uid = null) => {
     const userId = uid || user?.uid;
@@ -67,7 +80,6 @@ const fetchUserDoc = useCallback(async (uid) => {
     setError(null);
   }, []);
 
-  // Owner Register (First person for a room)
   const registerOwner = useCallback(async (email, password, profileData) => {
     try {
       setError(null);
@@ -104,7 +116,6 @@ const fetchUserDoc = useCallback(async (uid) => {
     }
   }, []);
 
-  // Owner Family Register
   const registerOwnerFamily = useCallback(async (email, password, ownerUid, profileData) => {
     try {
       setError(null);
@@ -143,7 +154,6 @@ const fetchUserDoc = useCallback(async (uid) => {
     }
   }, []);
 
-  // Add Renter (by Owner)
   const registerRenter = useCallback(async (email, password, ownerUid, profileData) => {
     try {
       setError(null);
@@ -184,7 +194,6 @@ const fetchUserDoc = useCallback(async (uid) => {
     }
   }, []);
 
-  // Renter Family Register
   const registerRenterFamily = useCallback(async (email, password, renterUid, profileData) => {
     try {
       setError(null);
@@ -223,7 +232,55 @@ const fetchUserDoc = useCallback(async (uid) => {
     }
   }, []);
 
-  // Optimized Login
+  const registerVisitor = useCallback(async (email, password, profileData) => {
+    try {
+      setError(null);
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+
+      const visitorData = {
+        uid,
+        email,
+        role: "visitor",
+        createdAt: new Date(),
+        ...profileData,
+      };
+
+      await setDoc(doc(db, "visitors", uid), visitorData);
+
+      console.log("Visitor registered in 'visitors' collection");
+      return uid;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  }, []);
+
+  const registerSecretary = useCallback(async (email, password, profileData) => {
+    try {
+      setError(null);
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+
+      const secretaryData = {
+        uid,
+        email,
+        role: "secretary",
+        createdAt: new Date(),
+        ...profileData,
+      };
+
+      // Save to users collection
+      await setDoc(doc(db, "users", uid), secretaryData);
+
+      console.log("Secretary registered in 'users' collection");
+      return uid;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
+  }, []);
+
   const login = useCallback(async (email, password) => {
     try {
       setError(null);
@@ -233,9 +290,10 @@ const fetchUserDoc = useCallback(async (uid) => {
       const uid = userCred.user.uid;
 
       const userData = await fetchUserDoc(uid);
-      if (!userData) throw new Error("User profile not found");
+      if (!userData) throw new Error("User profile not found in users or visitors collection");
 
       setUser(userCred.user);
+      console.log("Login successful. Role:", userData.role);
       return { user: userCred.user, profile: userData };
     } catch (error) {
       setError(error.message);
@@ -245,12 +303,12 @@ const fetchUserDoc = useCallback(async (uid) => {
     }
   }, [fetchUserDoc]);
 
-  // Optimized Logout
   const logout = useCallback(async () => {
     try {
       setError(null);
       await signOut(auth);
       clearAuthState();
+      console.log("Logout successful");
     } catch (error) {
       setError(error.message);
       throw error;
@@ -317,6 +375,8 @@ const fetchUserDoc = useCallback(async (uid) => {
     registerOwnerFamily,
     registerRenter,
     registerRenterFamily,
+    registerVisitor,
+    registerSecretary,
     login,
     logout,
     refreshUserData,

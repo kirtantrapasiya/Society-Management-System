@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import {User} from '../context/AuthContext'
+import { Eye, EyeOff } from "lucide-react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 
 export default function VisitorRegister() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,11 +19,16 @@ export default function VisitorRegister() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const capitalizeFullName = (name) => {
+    return name.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -35,14 +42,12 @@ export default function VisitorRegister() {
     setLoading(true);
 
     try {
-      // Create Firebase Authentication user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      // Check if already registered in visitors collection
       const existingDoc = await getDoc(doc(db, "visitors", userCredential.user.uid));
       if (existingDoc.exists()) {
         setError('Account already exists. Please login instead.');
@@ -50,9 +55,8 @@ export default function VisitorRegister() {
         return;
       }
 
-      // Store visitor data in Firestore 'visitors' collection
       await setDoc(doc(db, "visitors", userCredential.user.uid), {
-        name: formData.name,
+        name: capitalizeFullName(formData.name.trim()),
         email: formData.email,
         phone: formData.phone,
         role: 'visitor',
@@ -60,8 +64,7 @@ export default function VisitorRegister() {
         uid: userCredential.user.uid
       });
 
-      // Redirect to visitor dashboard
-      navigate('/visitor-dashboard');
+      navigate('/visitor-home');
     } catch (err) {
       console.error("Registration error:", err);
       if (err.code === 'auth/email-already-in-use') {
@@ -93,63 +96,81 @@ export default function VisitorRegister() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
                 <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                placeholder="John Doe"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition"
+                placeholder="full name"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                 <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition"
                 placeholder="visitor@example.com"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
                 <input
                 type="tel"
                 required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                placeholder="+91 98765 43210"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none transition"
+                placeholder="+91 22 1234 5678"
                 />
             </div>
+          
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+                  <input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
+                    className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-xl outline-none text-gray-900 text-sm md:text-base pr-10 md:pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(prev => !prev)}
+                    className="absolute right-3 top-9 md:top-10 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                <input
-                type="password"
-                required
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                placeholder="••••••••"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-                <input
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                placeholder="••••••••"
-                />
+                <div className="relative">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password *</label>
+                  <input
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    required
+                    className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-xl outline-none text-gray-900 text-sm md:text-base pr-10 md:pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(prev => !prev)}
+                    className="absolute right-3 top-9 md:top-10 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
             </div>
 
             <button
@@ -166,7 +187,7 @@ export default function VisitorRegister() {
                 Already have an account?{' '}
                 <button
                 onClick={() => navigate('/visitor-login')}
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-blue-600 hover:text-blue-500 font-semibold"
                 >
                 Login here
                 </button>

@@ -49,7 +49,7 @@ const ResidentLogin = () => {
 
       if (role === "secretary") navigate("/secretary-dashboard", { replace: true });
       else if (["owner", "owner_family", "renter", "renter_family"].includes(role)) {
-        navigate("/dashboard", { replace: true });
+        navigate("/resident-dashboard", { replace: true });
       } else setError("Role not found. Please contact admin.");
     } catch (err) {
       console.error("Login error:", err);

@@ -17,6 +17,9 @@ import VisitorLogin from "./pages/Login/VisitorLogin";
 import VisitorRegister from "./pages/Register/VisitorRegister";
 import RegisterChooseUserType from "./pages/Oprations/RegisterChooseUserType";
 import ProtectedRoute from "./components/ProtectedRoute";
+import VisitorHome from "./pages/VisitorHome";
+import SelectResidency from './pages/SelectResidency';
+import RecentVisits from './pages/RecentVisits';
 import LoginChooseUserType from "./pages/Oprations/LoginChooseUserType";
 
 function App() {
@@ -35,6 +38,9 @@ function App() {
           <Route path="/resident-register" element={<ResidentRegister />} />
           <Route path="/visitor-forgot-password" element={<VisitorForgotPassword />} />
           <Route path="/resident-forgot-password" element={<ResidentForgotPassword />} />
+          <Route path="/visitor-home" element={<VisitorHome />} />
+          <Route path="/select-residency" element={<SelectResidency />} />
+          <Route path="/residency" element={<RecentVisits />} />
           
           {/* Main Dashboard Route - Handles all room scenarios */}
           <Route
@@ -67,9 +73,6 @@ function App() {
             </ProtectedRoute>
           }
           />
-
-          {/* Catch all - redirect to home */}
-          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>
       </main>
 

@@ -23,17 +23,14 @@ const Navbar = () => {
 const isActive = (path) => {
   const currentPath = location.pathname;
   
-  // Exact match for all paths
   if (currentPath === path) {
     return true;
   }
   
-  // Special handling: Home should only be active on exact "/" path
   if (path === '/' && currentPath !== '/') {
     return false;
   }
   
-  // Dashboard routes need exact match to prevent multiple active states
   const dashboardRoutes = ['/resident-dashboard', '/visitor-dashboard', '/secretary-dashboard'];
   if (dashboardRoutes.includes(path) || dashboardRoutes.includes(currentPath)) {
     return currentPath === path;
@@ -55,34 +52,48 @@ const isActive = (path) => {
     return "/";
   };
 
+  const getHomePath = () => {
+    if (!userDoc || !userDoc.role) return "/";
+
+    if (userDoc.role === "visitor") {
+      return "/visitor-home";
+    } else {
+      return "/";
+    }
+  };
+
   const navLinks = [
     { 
-      path: "/", 
+      path: getHomePath(), 
       label: "Home", 
       show: true,
     },
     { 
       path: getDashboardLink(), 
       label: "Dashboard", 
-      show: !!user,
+      show: userDoc?.role !== "visitor",
+    },
+    { 
+      path: "/residency", 
+      label: "Recent Visits", 
+      show: userDoc?.role === "visitor",
+    },
+    { 
+      path: "/select-residency", 
+      label: "Select Residency", 
+      show: userDoc?.role === "visitor",
     },
     { 
       path: "/profile", 
       label: "Profile", 
-      show: !!user && userDoc?.role !== "visitor",
-    },
-    { 
-      path: "/settings", 
-      label: "Settings", 
-      show: !!user && userDoc?.role !== "visitor",
-    },
+      show: !!user,
+    }
   ];
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <img src={logo} alt="Logo" className="h-9 w-9" />
             <div className="flex flex-col leading-tight">

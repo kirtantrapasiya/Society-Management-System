@@ -18,14 +18,12 @@ export default function VisitorLogin() {
     setLoading(true);
 
     try {
-      // Sign in with Firebase Auth
       const userCredential = await signInWithEmailAndPassword(
         auth,
         formData.email,
         formData.password
       );
 
-      // Check if user exists in visitors collection
       const visitorDoc = await getDoc(doc(db, "visitors", userCredential.user.uid));
       
       if (!visitorDoc.exists()) {
@@ -35,8 +33,7 @@ export default function VisitorLogin() {
         return;
       }
 
-      // Redirect to visitor dashboard
-      navigate('/visitor-dashboard');
+      navigate('/visitor-home');
     } catch (err) {
       console.error("Login error:", err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
@@ -127,7 +124,7 @@ export default function VisitorLogin() {
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/visitor-register')}
-              className="text-blue-600 hover:text-blue-700 font-semibold"
+              className="text-blue-600 hover:text-blue-500 font-semibold"
             >
               Register here
             </button>

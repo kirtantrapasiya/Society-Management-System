@@ -19,7 +19,7 @@ const HomePage = () => {
       } else if (userDoc.role === 'secretary') {
         navigate('/secretary-dashboard');
       } else if (['owner', 'owner_family', 'renter', 'renter_family'].includes(userDoc.role)) {
-        navigate('/dashboard');
+        navigate('/resident-dashboard');
       }
     }
   }, [user, userDoc, navigate]);

@@ -182,7 +182,7 @@ const AddRenterModal = ({ ownerUid, ownerRoomNumber, onSuccess, onClose }) => {
         onSuccess();
       }
 
-      navigate('/dashboard');
+      navigate('/resident-dashboard');
 
     } catch (error) {
       console.error('Renter creation error:', error);
